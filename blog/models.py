@@ -14,3 +14,21 @@ class Maqale(models.Model):
     )
     #عنوان نویسنده بیان می شود نویسندممبر است ولی هر ممبری نویسنده نیست!
     #هر نویسنهده چنیدن مقاله دارد ولی هر مقاله یک نویسنده دارد
+    
+class Comment(models.Model):
+    
+    maqale = models.ForeignKey(
+        Maqale,
+        on_delete = models.CASCADE,
+        relatd_name = "comment"
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete= models.CASCADE
+    )
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.author.username} - {self.maqale.title}"
