@@ -6,15 +6,16 @@ app_name = "search"
 urlpatterns = [
     path("", views.search, name="search"),
     path(
-    "suggest/",
-    views.suggest,
-    name="suggest"
+        "suggest/",
+        views.suggest,
+        name="suggest"
     ),
     path(
-        "live",
+        "live/",
         views.live_search,
-        name = "live"
+        name="live"
     )
 ]
+
 # تعریف کردن مسیری برای اپ
-#مسیری برای فیچر های جست و جو پیشنهادی و جست و جو زنده 
+#مسیری برای فیچر های جست و جو پیشنهادی و جست و جو زنده
