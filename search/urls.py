@@ -5,5 +5,10 @@ app_name = "search"
 
 urlpatterns = [
     path("", views.search, name="search"),
+    path(
+    "suggest/",
+    views.suggest,
+    name="suggest"
+)
 ]
 # تعریف کردن مسیری برای اپ

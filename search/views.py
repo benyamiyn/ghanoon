@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 # Create your views here.
 from django.db.models import Q
 from blog.models import Maqale
@@ -50,3 +51,16 @@ def search(requests):
     }
     return render(requests,"search/results.html",context)
 #مرتب سازی بر اساس زمان نوشتن مقاله یا جیدید ترین یا قدیمی ترین یا مرتب سازی کلا بر اساس عنوان مقاله 
+def suggest(request):
+    q = request.GET.get("q","")
+    data = []
+    if q :
+        data = list(
+            Maqale.objects.filter(
+                title_icontains=q
+            ).values_list(
+                "title",
+                flat=True
+            )[:5]
+        )
+    return JsonResponse(data, safe=False)
