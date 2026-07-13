@@ -1,10 +1,10 @@
 from django.shortcuts import render
-
 # Create your views here.
 from django.db.models import Q
-
 from blog.models import Maqale
 from .forms import SearchForm 
+
+
 
 def search(requests):
     form = SearchForm(requests.GET)
@@ -27,11 +27,26 @@ def search(requests):
             Q(category__title__icontains=q)
             #قرار است جست و جو را روی عنوان نویسنده متن مقاله و و دسته بندی آن انجام دهیم
         ).distinct()
+            
+    sort = form.cleaned_data["sort"]
+    
+    if sort == "newest":
+        
+        articles = articles.order_by["-created_at"]
+        
+    elif sort == "o0ldest" :
+        
+        articles = articles.order_by["created_at"]
+        
+    elif sort == "title":
+        
+        articles = articles.order_by["title"]
+        
     context = {
         "form":form,
         "articles":articles,
         "query": q if form.is_valid() else "",
-        
+    
     }
     return render(requests,"search/results.html",context)
-    
+#مرتب سازی بر اساس زمان نوشتن مقاله یا جیدید ترین یا قدیمی ترین یا مرتب سازی کلا بر اساس عنوان مقاله 
