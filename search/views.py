@@ -64,3 +64,20 @@ def suggest(request):
             )[:5]
         )
     return JsonResponse(data, safe=False)
+
+def live_search(request):
+    
+    q = request.GET.get("q","")
+    articles = Maqale.objects.filter(
+        Q(title_icontanis=q) |
+        Q(matn_icontains=q)
+    )[:10]
+    return render(
+        request,
+        "search/live_results.html",
+        {
+        "articles": articles
+        }
+    )
+    
+#ایجاغد فیچر جست و جو زنده با تابعی با همین نام
