@@ -31,6 +31,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "search",
+    "blog",
+    "account",
+    "config",
+    #اپ های ساخته شده را باید اینجا نام ببریم!
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
