@@ -5,7 +5,22 @@
 </head>
 
 <body>
+{% extends "base.html" %}
 
+{% load highlight %}
+
+{% block content %}
+
+...
+
+{% endblock %}
+<!-- بعدا اگر خواستی 
+ {{ article.title|highlight:query }}
+
+یا
+
+{{ article.matn|highlight:query }}
+ -->
 </body>
 
 </html>
