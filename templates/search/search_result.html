@@ -8,7 +8,14 @@
 {% extends "base.html" %}
 
 {% load highlight %}
+<!-- وقتی نتایج جست  و جو هایلایت می شود-->
 
+
+<input id="search-box" name="q" autocomplete="off">
+
+<div id="suggestions">
+</div>
+<!-- کلمات پیشنهادی برای جست و جو -->
 {% block content %}
 
 ...
@@ -21,6 +28,29 @@
 
 {{ article.matn|highlight:query }}
  -->
+<!--کد js برای کلمات پیشنهادی 
+const box = document.getElementById("search-box");
+const suggestions = document.getElementById("suggestions");
+
+box.addEventListener("input", async () => {
+
+    const response = await fetch(
+        "/search/suggest/?q=" + box.value
+    );
+
+    const data = await response.json();
+
+    suggestions.innerHTML = "";
+
+    data.forEach(item => {
+
+        suggestions.innerHTML +=
+            `<div>${item}</div>`;
+
+    });
+
+});
+-->
 </body>
 
 </html>
