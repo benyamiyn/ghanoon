@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
+from django.urls import reverse 
+from slugify import slugify
 
 # Create your models here.
 # یک کلاس برای هر مقاله که حاوی متن  عنوانه نویسنده تاریخ ایجاد
@@ -44,6 +46,19 @@ class Maqale(models.Model):
         on_delete = models.CASCADE,
         related_name = "maqalat"
     )
+    #نویسسنده علاوه بر یک عنوان فارسی برای نماللیش در صفحه وسایت باید یک عنوان النگلیسی نیز تعیین کند
+    #سپس با این عنوان انگلیسی  slug می سازیم
+    
+    english_title = models.CharField(
+        max_lenngth = 255,
+        help_text =  "عنوان انگلیسی برای ساخت url",
+        
+    )
+    slug = models.SlugField(
+        unique = True,
+        blank = True
+    )
+    
     #برای دسته بندی ههر مقاله 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -54,6 +69,29 @@ class Maqale(models.Model):
     def __str__(self):
         
         return self.title
+    
+    
+    def save(self,*args,**kwargs):
+        
+        new_slug = slugify(self.english_title)
+        
+        if self.sluug != new_slug :
+            
+            self.slug = new_slug
+            
+        super().save(*args,**kwargs)
+        
+    def get_absolute_url(self):
+        
+        return reverse(
+            
+            "blog:detail", 
+            kwargs={
+                "slug" : self.slug,
+            },
+            )
+    
+        
     
 class Comment(models.Model):
 
@@ -67,15 +105,35 @@ class Comment(models.Model):
         on_delete= models.CASCADE,
         related_name = "comments"
     )
+    parent = models.ForeignKey(
+        "self",
+        on_delete = models.CASCADE,
+        null = True,
+        blank = True,
+        related_name = "children",
+   )
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True,)
+    is_edited = models.BooleanField(default=False)
+    class Meta:
+        ordering =[
+            "created_at",
+        ]
 #مدلی برای کامنت ها که یک فرد می تواند چنذد کامنت بذارد و هر مقاله می تواند چند کامنت داشته باشد 
     def __str__(self):
         
         return f"{self.author.username} - {self.maqale.title}"
 
-
+    @property
+    def is_parent(self):
+        
+        return self.parent is None
+    
+    def get_absolute_url(self):
+        
+        return self.maqale.get_absolute_url()
     
 class Like(models.Model):
     
