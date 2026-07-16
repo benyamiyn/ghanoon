@@ -1,11 +1,43 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
+<h1>{{ maqale.title }}</h1>
+<p>{{ maqale.matn }}</p>
 
-</head>
+<p>تعداد لایک: {{ likes_count }}</p>
 
-<body>
+<form method="post" action="{% url 'blog:toggle_like' maqale.slug %}">
+    {% csrf_token %}
+    <button type="submit">
+        {% if liked %}آنلایک{% else %}لایک{% endif %}
+    </button>
+</form>
 
-</body>
+<hr>
 
-</html>
+<h3>کامنت‌ها</h3>
+
+{% for comment in comments %}
+    <p>{{ comment.author.username }} : {{ comment.text }}</p>
+
+    {% for child in comment.children.all %}
+        <div style="margin-right: 30px;">
+            <p>{{ child.author.username }} : {{ child.text }}</p>
+        </div>
+    {% endfor %}
+
+    <form method="post" action="{% url 'blog:add_comment' maqale.slug %}">
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+        {{ form.text }}
+        <button type="submit">پاسخ</button>
+    </form>
+
+    <hr>
+{% empty %}
+    <p>هنوز کامنتی ثبت نشده.</p>
+{% endfor %}
+
+<h3>ثبت کامنت</h3>
+<form method="post" action="{% url 'blog:add_comment' maqale.slug %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ارسال</button>
+</form>
