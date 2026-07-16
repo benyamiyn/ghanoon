@@ -35,7 +35,7 @@ def search(request):
         "articles": articles,
         "query": q,
     }
-    return render(request, "search/results.html", context)
+    return render(request, "search/search_results.html", context)
 
 
 def suggest(request):
