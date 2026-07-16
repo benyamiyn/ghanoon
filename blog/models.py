@@ -98,7 +98,7 @@ class Comment(models.Model):
         return reverse(
             "blog:detail",
             kwargs={
-                "slug": self.maqale.slug,
+                "pk": self.maqale.pk,
             },
         )
     
