@@ -1,11 +1,39 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه اصلی</title>
 </head>
-
 <body>
+    <h1>لیست مقاله‌ها</h1>
 
+    {% if maqaleha %}
+        {% for maqale in maqaleha %}
+            <div style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">
+                <h2>
+                    <a href="{{ maqale.get_absolute_url }}">{{ maqale.title }}</a>
+                </h2>
+
+                <p>
+                    نویسنده: {{ maqale.author.username }} |
+                    دسته‌بندی: {{ maqale.category.title }} |
+                    تاریخ: {{ maqale.created_at }}
+                </p>
+
+                {% if maqale.thumbnail %}
+                    <img src="{{ maqale.thumbnail.url }}" alt="{{ maqale.title }}" width="200">
+                {% endif %}
+
+                <p>
+                    {{ maqale.matn|truncatewords:30 }}
+                </p>
+
+                <a href="{{ maqale.get_absolute_url }}">ادامه مطلب</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>هنوز مقاله‌ای ثبت نشده است.</p>
+    {% endif %}
 </body>
-
 </html>
