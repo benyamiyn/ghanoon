@@ -1,92 +1,75 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotAllowed, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import CommentForm
-from .models import Comment, Maqale, Like
+from .models import Comment, Like, Maqale
 
-# Create your views here.
+
+def home(request):
+    maqaleha = Maqale.objects.select_related("author", "category").order_by("-created_at")
+    return render(request, "blog/home.html", {"maqaleha": maqaleha})
+
+
 def maqale_detail(request, slug):
-    maqale = get_object_or_404(Maqale, slug=slug)
-    
-    comments = (
-        maqale.comments.filter(is_active=True, parent__isnull=True)
-        .select_related("author")
-        .prefetch_related("children__author")
+    maqale = get_object_or_404(
+        Maqale.objects.select_related("author", "category"),
+        slug=slug,
     )
-    form = CommentForm()
+    comments = maqale.comments.filter(parent__isnull=True, is_active=True).select_related("author")
+    like_count = maqale.likes.count()
 
-    liked = False
+    is_liked = False
     if request.user.is_authenticated:
-        liked = maqale.likes.filter(user=request.user).exists()
-    
+        is_liked = Like.objects.filter(maqale=maqale, user=request.user).exists()
+
     context = {
         "maqale": maqale,
         "comments": comments,
-        "form": form,
-        "liked": liked,
-        "likes_count": maqale.likes.count(),
+        "like_count": like_count,
+        "is_liked": is_liked,
     }
-    return render(request, "blog/post_detail.html", context)
-    
-    
+    return render(request, "blog/posrt_detailk.html", context)
+
+
 @login_required
 def add_comment(request, slug):
-    
     maqale = get_object_or_404(Maqale, slug=slug)
-    
-    if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
-        
-    form = CommentForm(request.POST)
-        
-    if form.is_valid():
-            
-        parent = None
-        parent_id = form.cleaned_data.get("parent_id")
-                  
-        if parent_id:
-            parent = get_object_or_404(
-                Comment,
-                pk=parent_id,
+
+    if request.method == "POST":
+        text = request.POST.get("text", "").strip()
+        parent_id = request.POST.get("parent_id")
+
+        if text:
+            comment = Comment.objects.create(
                 maqale=maqale,
-                is_active=True,
+                author=request.user,
+                text=text,
             )
 
-        Comment.objects.create(
-            maqale=maqale,
-            author=request.user,
-            parent=parent,
-            text=form.cleaned_data["text"],
-        )
+            if parent_id:
+                parent_comment = Comment.objects.filter(id=parent_id, maqale=maqale).first()
+                if parent_comment:
+                    comment.parent = parent_comment
+                    comment.save()
 
-    return redirect("blog:detail", slug=maqale.slug)
+            messages.success(request, "نظر شما ثبت شد.")
+        else:
+            messages.error(request, "متن نظر نمی‌تواند خالی باشد.")
+
+    return redirect(maqale.get_absolute_url())
 
 
 @login_required
 def toggle_like(request, slug):
-    if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
-
     maqale = get_object_or_404(Maqale, slug=slug)
 
     like = Like.objects.filter(maqale=maqale, user=request.user).first()
 
     if like:
         like.delete()
-        liked = False
+        messages.info(request, "لایک حذف شد.")
     else:
         Like.objects.create(maqale=maqale, user=request.user)
-        liked = True
+        messages.success(request, "مقاله لایک شد.")
 
-    likes_count = maqale.likes.count()
-
-    if request.headers.get("x-requested-with") == "XMLHttpRequest":
-        return JsonResponse(
-            {
-                "liked": liked,
-                "likes_count": likes_count,
-            }
-        )
-
-    return redirect("blog:detail", slug=maqale.slug)
+    return redirect(maqale.get_absolute_url())
