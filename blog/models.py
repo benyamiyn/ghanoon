@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse 
-from slugify import slugify
+from django.urls import reverse
+from django.utils.text import slugify
 
 # Create your models here.
 # یک کلاس برای هر مقاله که حاوی متن  عنوانه نویسنده تاریخ ایجاد
@@ -16,7 +16,7 @@ class Category(models.Model):
     def __str__(self):
         
         return self.title    
-    #یک مدل برای کامنت ها 
+    #یک مدل برای کامنت ها
     #def __str__ هنگام راخوانی نام تابع عنوان را برمی گرداند
  
  
@@ -25,41 +25,29 @@ class Maqale(models.Model):
     
     title = models.CharField(max_length=255)
     #title
+    slug = models.SlugField(max_length=255, unique=True, blank=True, allow_unicode=True)
     matn = models.TextField()
     #متن مقاله
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name = "maqalat"
+        related_name="maqalat"
     )
     thumbnail = models.ImageField(
-    upload_to="maqale_thumbnails/",
-    blank=True,
-    null=True
+        upload_to="maqale_thumbnails/",
+        blank=True,
+        null=True
     )
-    #thumbnail برای عکس تامنیل است 
+    #thumbnail برای عکس تامنیل است
     #ForeignKey نوعی رابطه یک به چند ایجاد می کند یعنی هر نویسنده چند مقاله ممکن است داشته باشد
-    #هر نویسنده یک مقاله دارد که  نوسنده نوعی عضو در وبلاگ است 
+    #هر نویسنده یک مقاله دارد که  نوسنده نوعی عضو در وبلاگ است
     
     category = models.ForeignKey(
         Category,
-        on_delete = models.CASCADE,
-        related_name = "maqalat"
+        on_delete=models.CASCADE,
+        related_name="maqalat"
     )
-    #نویسسنده علاوه بر یک عنوان فارسی برای نماللیش در صفحه وسایت باید یک عنوان النگلیسی نیز تعیین کند
-    #سپس با این عنوان انگلیسی  slug می سازیم
-    
-    english_title = models.CharField(
-        max_lenngth = 255,
-        help_text =  "عنوان انگلیسی برای ساخت url",
-        
-    )
-    slug = models.SlugField(
-        unique = True,
-        blank = True
-    )
-    
-    #برای دسته بندی ههر مقاله 
+    #برای دسته بندی ههر مقاله
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #تاریخ ایجاد و تاریخ آپدیت
@@ -69,6 +57,29 @@ class Maqale(models.Model):
     def __str__(self):
         
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title, allow_unicode=True)
+            slug = base_slug
+            counter = 1
+
+            while Maqale.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse(
+            "blog:detail",
+            kwargs={
+                "slug": self.slug,
+            },
+        )
+    
     
     
     def save(self,*args,**kwargs):
@@ -97,13 +108,20 @@ class Comment(models.Model):
 
     maqale = models.ForeignKey(
         Maqale,
-        on_delete = models.CASCADE,
-        related_name = "comments"
+        on_delete=models.CASCADE,
+        related_name="comments"
     )
     author = models.ForeignKey(
         User,
-        on_delete= models.CASCADE,
-        related_name = "comments"
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="children",
     )
     parent = models.ForeignKey(
         "self",
@@ -115,13 +133,15 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True,)
+    is_active = models.BooleanField(default=True)
     is_edited = models.BooleanField(default=False)
+
     class Meta:
-        ordering =[
+        ordering = [
             "created_at",
         ]
-#مدلی برای کامنت ها که یک فرد می تواند چنذد کامنت بذارد و هر مقاله می تواند چند کامنت داشته باشد 
+
+#مدلی برای کامنت ها که یک فرد می تواند چنذد کامنت بذارد و هر مقاله می تواند چند کامنت داشته باشد
     def __str__(self):
         
         return f"{self.author.username} - {self.maqale.title}"
@@ -132,8 +152,13 @@ class Comment(models.Model):
         return self.parent is None
     
     def get_absolute_url(self):
-        
-        return self.maqale.get_absolute_url()
+        return reverse(
+            "blog:detail",
+            kwargs={
+                "slug": self.maqale.slug,
+            },
+        )
+    
     
 class Like(models.Model):
     
@@ -146,24 +171,22 @@ class Like(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name = "likes"
-    ) 
+        related_name="likes"
+    )
+
     class Meta:
         
         constraints = [
-        models.UniqueConstraint(
-            fields=["user", "maqale"],
-            name="unique_user_like"
-        )
-    ]
+            models.UniqueConstraint(
+                fields=["user", "maqale"],
+                name="unique_user_like"
+            )
+        ]
         
     def __str__(self):
         
         return f"{self.user.username} likes {self.maqale.title}"
 #مدلی برای لایک ها
-# هر فرد می تواند چند مقاله را لایک کند 
-# هر مقاله گزینه لایک کردن دارد هر فرد می تواند فقط یک بار یک مقاله را لایک کند 
-#این ویژگی با class meta  تعریف شده است 
-  
-
-    
+# هر فرد می تواند چند مقاله را لایک کند
+# هر مقاله گزینه لایک کردن دارد هر فرد می تواند فقط یک بار یک مقاله را لایک کند
+#این ویژگی با class meta  تعریف شده است
