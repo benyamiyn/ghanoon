@@ -7,7 +7,12 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     
     
-    prof_image = models.ImageField()
+    prof_image = models.ImageField(
+        
+        upload_to = "/profiles",
+        blank = True,
+        null = True
+    )
     
     bio = models.TextField(blank=True)
    
