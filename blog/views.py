@@ -28,7 +28,7 @@ def maqale_detail(request, slug):
         "like_count": like_count,
         "is_liked": is_liked,
     }
-    return render(request, "blog/posrt_detailk.html", context)
+    return render(request, "blog/post_detail.html", context)
 
 
 @login_required
