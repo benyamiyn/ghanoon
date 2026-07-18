@@ -3,12 +3,16 @@ from .models import Comment
 
 
 class CommentForm(forms.ModelForm):
-    
-    parent_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
-    
+
+    parent_id = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput,
+    )
+
     class Meta:
         model = Comment
-        fields = ["text", "parent_id"]
+        fields = ["text"]      # فقط فیلدهای مدل
+
         widgets = {
             "text": forms.Textarea(
                 attrs={

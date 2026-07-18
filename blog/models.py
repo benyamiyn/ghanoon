@@ -10,7 +10,12 @@ from django.utils.text import slugify
 
 class Category(models.Model):
 
-    title = models.CharField(max_length=100)
+    title = models.CharField(
+        
+        max_length = 100,
+        unique = True
+                              
+        )
 
     def __str__(self):
 
@@ -93,7 +98,7 @@ class Comment(models.Model):
     )
     parent = models.ForeignKey(
         "self",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="children",
@@ -106,7 +111,7 @@ class Comment(models.Model):
 
     class Meta:
         ordering = [
-            "created_at",
+            "-created_at",
         ]
 
 #مدلی برای کامنت ها که یک فرد می تواند چنذد کامنت بذارد و هر مقاله می تواند چند کامنت داشته باشد
