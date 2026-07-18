@@ -9,7 +9,7 @@ class Profile(models.Model):
     
     prof_image = models.ImageField(
         
-        upload_to = "/profiles",
+        upload_to = "profiles/",
         blank = True,
         null = True
     )
