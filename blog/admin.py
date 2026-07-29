@@ -36,19 +36,55 @@ class MaqaleAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
             return True
+        if not self._is_author(request):
+                    
+                    return False 
+        if obj is None:
+                    
+                return True
+                
+        return obj.author == request.user 
         return self._is_author(request)
 
     def has_delete_permission(self, request, obj=None):
         if request.user.is_superuser:
+            
             return True
-        return self._is_author(request)
+        
+        
+        if not self._is_author(request):
+            return False
+        
+        if obj is None:
+            return True
+        
+        return obj.author == request.user 
+            
+        
 
     def save_model(self, request, obj, form, change):
+        
         if not obj.pk and not obj.author_id:
+            
             obj.author = request.user
+        
+        
         super().save_model(request, obj, form, change)
-
-
+ 
+  
+  #هر نویسنده فقط بتواند مکقاله های خودش را تغییر دهد 
+    def get_queryset(self,request):
+        
+        qs = super().get_queryset(request)
+        
+        if request.user.is_superuser:
+            return qs
+        
+    def get_readonly_fields(self, request, obj =None):
+        if request.user.is_superuser:
+            return ()
+        
+        return ("author",)
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("id", "author", "maqale", "parent", "is_active", "is_edited", "created_at")
