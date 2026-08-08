@@ -1,0 +1,429 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>مدیریت اعضا | مشاور صوت</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+<header class="site-header">
+
+
+<div class="header-inner">
+
+
+
+<a href="{% url 'home' %}" class="logo">
+
+
+<span class="logo-mark"></span>
+
+مشاور صوت
+
+
+</a>
+
+
+
+
+<div class="profile-menu-wrap" id="profileMenuWrap">
+
+
+<button class="profile-avatar" id="profileToggle">
+
+
+{{ request.user.username|first|upper }}
+
+
+</button>
+
+
+
+
+<div class="profile-dropdown" id="profileDropdown">
+
+
+
+<a href="{% url 'account:profile' %}" class="pd-item pd-highlight">
+
+👤 پروفایل من
+
+</a>
+
+
+
+<a href="{% url 'account:members' %}" class="pd-item">
+
+👥 مدیریت اعضا
+
+</a>
+
+
+
+<a href="{% url 'account:logout' %}" class="pd-item pd-danger">
+
+خروج
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+<div class="page-heading">
+
+
+<div class="page-heading-inner">
+
+
+<h1>
+
+مدیریت اعضا
+
+</h1>
+
+
+<p>
+
+لیست همه‌ی افرادی که در سایت ثبت‌نام کرده‌اند — روی هر ردیف کلیک کنید تا وارد پروفایل عضو شوید
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="access-notice">
+
+
+⚠ این صفحه فقط برای «مالک» قابل مشاهده است.
+
+
+</div>
+
+
+
+
+
+
+<main class="dashboard-main-content">
+
+
+
+
+
+
+<form 
+method="get"
+action="{% url 'account:members' %}"
+class="member-search"
+>
+
+
+<input 
+type="text"
+name="q"
+value="{{ request.GET.q }}"
+placeholder="جست‌وجو بر اساس شناسه، نام یا ایمیل..."
+>
+
+
+<button type="submit" class="member-search-btn">
+
+جست‌وجو
+
+</button>
+
+
+
+</form>
+
+
+
+
+
+
+
+<div class="member-table">
+
+
+
+<div class="member-table-head">
+
+
+<span>
+شناسه
+</span>
+
+
+<span>
+نام کاربری
+</span>
+
+
+<span>
+ایمیل
+</span>
+
+
+<span>
+نقش فعلی
+</span>
+
+
+<span>
+عملیات
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+{% for member in members %}
+
+
+
+<a 
+href="{% url 'account:member_profile' member.id %}"
+class="member-row"
+>
+
+
+
+<span class="member-id">
+
+#{{ member.id }}
+
+</span>
+
+
+
+
+
+<span class="member-name">
+
+{{ member.username }}
+
+</span>
+
+
+
+
+
+<span class="member-email">
+
+{{ member.email }}
+
+</span>
+
+
+
+
+
+<span class="member-role role-{{ member.profile.role }}">
+
+
+
+{{ member.profile.get_role_display }}
+
+
+
+</span>
+
+
+
+
+
+
+
+<span class="member-actions">
+
+
+
+{% if member.profile.role == "member" %}
+
+
+
+<form 
+method="post"
+action="{% url 'account:update_member_role' member.id %}"
+>
+
+
+{% csrf_token %}
+
+
+<button 
+type="submit"
+name="new_role"
+value="writer"
+class="btn-promote"
+onclick="event.stopPropagation();"
+>
+
+ارتقا به نویسنده
+
+</button>
+
+
+</form>
+
+
+
+
+
+{% elif member.profile.role == "writer" %}
+
+
+
+<span class="already-writer">
+
+— نویسنده است —
+
+</span>
+
+
+
+
+{% elif member.profile.role == "owner" %}
+
+
+
+<span class="already-writer">
+
+—
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+</span>
+
+
+
+</a>
+
+
+
+
+
+
+{% empty %}
+
+
+
+<p>
+
+هیچ عضوی پیدا نشد.
+
+</p>
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+<footer class="site-footer">
+
+
+<div class="footer-bottom">
+
+
+© ۲۰۲۶ مشاور صوت — تمام حقوق محفوظ است
+
+
+</div>
+
+
+</footer>
+
+
+
+
+
+
+<script src="{% static 'js/main.js' %}"></script>
+
+
+
+</body>
+
+
+</html>

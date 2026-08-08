@@ -1,0 +1,195 @@
+/* ===========================================================
+   مشاور صوت — استایل صفحات ورود و ثبت‌نام (طرح دوستونه)
+   =========================================================== */
+
+.auth-page{
+  min-height:100vh;
+  display:flex;
+}
+@media(max-width:860px){
+  .auth-page{ flex-direction:column; }
+}
+
+/* ---------------- پنل تزئینی برند ---------------- */
+.auth-brand-panel{
+  flex:1 1 42%;
+  position:relative;
+  background:linear-gradient(150deg, var(--navy), var(--navy-2) 60%, #3a3050);
+  color:#fff;
+  padding:44px 40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  min-height:100vh;
+}
+@media(max-width:860px){
+  .auth-brand-panel{ min-height:auto; padding:32px 24px 60px; }
+}
+
+.auth-brand-pattern{
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(224,163,85,.12) 0, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(224,163,85,.10) 0, transparent 40%);
+  pointer-events:none;
+}
+
+.auth-brand-logo{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:800;
+  font-size:18px;
+  color:#fff;
+  position:relative;
+  z-index:1;
+}
+
+.auth-brand-content{
+  position:relative;
+  z-index:1;
+  max-width:380px;
+}
+.auth-brand-content h2{
+  font-size:24px;
+  font-weight:800;
+  line-height:1.6;
+  margin-bottom:14px;
+}
+.auth-brand-content p{
+  font-size:13.5px;
+  color:rgba(255,255,255,.65);
+  line-height:1.9;
+  margin-bottom:26px;
+}
+
+.auth-brand-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.auth-brand-list li{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  color:rgba(255,255,255,.85);
+}
+.auth-brand-icon{
+  width:30px; height:30px;
+  border-radius:9px;
+  background:rgba(255,255,255,.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  font-size:14px;
+}
+
+.auth-brand-wave{
+  position:relative;
+  z-index:1;
+  width:100%;
+  height:44px;
+}
+
+/* ---------------- پنل فرم ---------------- */
+.auth-form-panel{
+  flex:1 1 58%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px 24px;
+  background:var(--paper);
+}
+
+.auth-card{
+  width:100%;
+  max-width:380px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:36px 30px;
+  box-shadow:0 14px 40px rgba(35,43,61,.07);
+}
+
+.auth-title{
+  font-size:21px;
+  font-weight:800;
+  color:var(--navy);
+  margin-bottom:6px;
+  text-align:center;
+}
+
+.auth-subtitle{
+  font-size:13px;
+  color:var(--muted);
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.auth-error{
+  background:#fbe9e7;
+  border:1px solid #e8b4ac;
+  color:#a8392e;
+  font-size:12.5px;
+  padding:10px 14px;
+  border-radius:9px;
+  margin-bottom:18px;
+}
+
+.auth-form{
+  display:flex;
+  flex-direction:column;
+}
+
+.auth-label{
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--navy-2);
+  margin-bottom:6px;
+}
+
+.auth-input{
+  font-family:inherit;
+  font-size:14px;
+  padding:11px 14px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--paper-2);
+  color:var(--ink);
+  outline:none;
+  margin-bottom:16px;
+  transition:border-color .15s ease;
+}
+.auth-input:focus{
+  border-color:var(--amber);
+  background:#fff;
+}
+.auth-input::placeholder{ color:var(--muted); }
+
+.auth-submit{
+  background:var(--amber);
+  color:#fff;
+  font-weight:700;
+  font-size:14.5px;
+  padding:12px;
+  border-radius:9px;
+  margin-top:6px;
+}
+.auth-submit:hover{ background:#b8721f; }
+
+.auth-switch{
+  text-align:center;
+  font-size:12.5px;
+  color:var(--muted);
+  margin-top:20px;
+}
+.auth-switch a{
+  color:var(--amber);
+  font-weight:700;
+}
+.auth-switch a:hover{ text-decoration:underline; }

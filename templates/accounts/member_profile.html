@@ -1,0 +1,537 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>پروفایل عضو | مشاور صوت</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="header-inner">
+
+
+<a href="{% url 'home' %}" class="logo">
+
+<span class="logo-mark"></span>
+
+مشاور صوت
+
+</a>
+
+
+
+<div class="profile-menu-wrap" id="profileMenuWrap">
+
+
+<button class="profile-avatar" id="profileToggle">
+
+{{ request.user.username|first|upper }}
+
+</button>
+
+
+
+<div class="profile-dropdown" id="profileDropdown">
+
+
+<a href="{% url 'account:profile' %}" class="pd-item pd-highlight">
+
+👤 پروفایل من
+
+</a>
+
+
+
+<a href="{% url 'account:members' %}" class="pd-item">
+
+👥 مدیریت اعضا
+
+</a>
+
+
+
+<a href="{% url 'account:logout' %}" class="pd-item pd-danger">
+
+خروج
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</header>
+
+
+
+
+
+<div class="page-heading">
+
+<div class="page-heading-inner">
+
+
+<a href="{% url 'account:members' %}" class="back-link">
+
+← بازگشت به لیست اعضا
+
+</a>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+<main class="dashboard-main-content">
+
+
+<div class="profile-card">
+
+
+
+<div class="profile-card-head">
+
+
+<div class="profile-big-avatar">
+
+{{ member.username|first|upper }}
+
+</div>
+
+
+
+<div>
+
+
+<h2>
+
+{{ member.username }}
+
+</h2>
+
+
+
+<span class="member-role role-{{ member.profile.role }}">
+
+{{ member.profile.get_role_display }}
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="profile-info-grid">
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+شناسه کاربری
+
+</span>
+
+
+<span class="info-value">
+
+#{{ member.id }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+ایمیل
+
+</span>
+
+
+<span class="info-value">
+
+{{ member.email }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+تاریخ عضویت
+
+</span>
+
+
+<span class="info-value">
+
+{{ member.date_joined|date:"Y/m/d" }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+تعداد کامنت‌ها
+
+</span>
+
+
+<span class="info-value">
+
+{{ comment_count }}
+
+</span>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="role-action-box">
+
+
+<h3>
+
+مدیریت نقش
+
+</h3>
+
+
+<p>
+
+می‌توانید نقش این عضو را تغییر دهید.
+
+</p>
+
+
+
+
+
+<form 
+method="post"
+action="{% url 'account:update_member_role' member.id %}"
+class="role-form"
+>
+
+
+{% csrf_token %}
+
+
+
+{% if member.profile.role == "member" %}
+
+
+<button 
+type="submit"
+class="btn-promote-big"
+name="new_role"
+value="writer"
+>
+
+⬆ ارتقا به نویسنده
+
+</button>
+
+
+
+{% elif member.profile.role == "writer" %}
+
+
+<button 
+type="submit"
+class="btn-promote-big"
+name="new_role"
+value="member"
+>
+
+⬇ کاهش به عضو ساده
+
+</button>
+
+
+
+{% endif %}
+
+
+
+
+</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="danger-zone-box">
+
+
+<h3>
+
+حذف حساب کاربری
+
+</h3>
+
+
+
+<p>
+
+این عملیات غیرقابل بازگشت است. تمام کامنت‌ها و فعالیت‌های این کاربر نیز حذف می‌شود.
+
+</p>
+
+
+
+
+<button 
+type="button"
+class="btn-delete-account"
+id="deleteAccountBtn"
+>
+
+🗑 حذف حساب این کاربر
+
+</button>
+
+
+
+
+
+
+
+<div 
+class="delete-confirm-box"
+id="deleteConfirmBox"
+style="display:none;"
+>
+
+
+<p>
+
+مطمئنید؟ این کار قابل بازگشت نیست.
+
+</p>
+
+
+
+<div class="delete-confirm-actions">
+
+
+
+<form 
+method="post"
+action="{% url 'account:delete_member' member.id %}"
+>
+
+
+{% csrf_token %}
+
+
+<button 
+type="submit"
+class="btn-delete-confirm"
+>
+
+بله، حذف شود
+
+</button>
+
+
+</form>
+
+
+
+<button 
+type="button"
+class="btn-delete-cancel"
+id="deleteCancelBtn"
+>
+
+انصراف
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+</main>
+
+
+
+
+
+
+
+
+<footer class="site-footer">
+
+
+<div class="footer-bottom">
+
+
+© ۲۰۲۶ مشاور صوت — تمام حقوق محفوظ است
+
+
+</div>
+
+
+</footer>
+
+
+
+
+
+
+
+<script src="{% static 'js/main.js' %}"></script>
+
+
+
+<script>
+
+
+const deleteBtn = document.getElementById('deleteAccountBtn');
+
+const confirmBox = document.getElementById('deleteConfirmBox');
+
+const cancelBtn = document.getElementById('deleteCancelBtn');
+
+
+
+if(deleteBtn){
+
+
+deleteBtn.addEventListener('click',()=>{
+
+
+confirmBox.style.display='block';
+
+deleteBtn.style.display='none';
+
+
+});
+
+
+}
+
+
+
+if(cancelBtn){
+
+
+cancelBtn.addEventListener('click',()=>{
+
+
+confirmBox.style.display='none';
+
+deleteBtn.style.display='inline-flex';
+
+
+});
+
+
+}
+
+
+
+</script>
+
+
+
+</body>
+</html>

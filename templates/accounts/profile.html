@@ -1,11 +1,303 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
+{% load static %}
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پروفایل من | مشاور صوت</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 
 <body>
 
-</body>
+<header class="site-header">
+  <div class="header-inner">
 
+    <a href="{% url 'home' %}" class="logo">
+      <span class="logo-mark"></span>
+      مشاور صوت
+    </a>
+
+    <div class="profile-menu-wrap" id="profileMenuWrap">
+
+      <button class="profile-avatar" id="profileToggle">
+        {{ user.username|first|upper }}
+      </button>
+
+      <div class="profile-dropdown" id="profileDropdown">
+
+        <a href="{% url 'account:profile' %}" class="pd-item pd-highlight">
+          👤 پروفایل من
+        </a>
+
+        {% if user.profile.role == 'admin' %}
+        <a href="#" class="pd-item">
+          👥 مدیریت اعضا
+        </a>
+        {% endif %}
+
+        <a href="{% url 'account:logout' %}" class="pd-item pd-danger">
+          خروج
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+</header>
+
+
+<div class="page-heading">
+  <div class="page-heading-inner">
+    <h1>پروفایل من</h1>
+  </div>
+</div>
+
+
+
+<main class="dashboard-main-content">
+
+
+<div class="profile-card">
+
+  <div class="profile-card-head">
+
+    <div class="profile-big-avatar">
+      {{ user.username|first|upper }}
+    </div>
+
+
+    <div>
+
+      <h2>
+        {{ user.username }}
+      </h2>
+
+
+      {% if user.profile.role == 'writer' %}
+
+        <span class="member-role role-writer">
+          نویسنده
+        </span>
+
+      {% elif user.profile.role == 'admin' %}
+
+        <span class="member-role role-admin">
+          مدیر
+        </span>
+
+      {% else %}
+
+        <span class="member-role role-member">
+          عضو ساده
+        </span>
+
+      {% endif %}
+
+
+    </div>
+
+  </div>
+
+
+
+  <div class="profile-info-grid">
+
+    <div class="info-item">
+
+      <span class="info-label">
+        ایمیل
+      </span>
+
+      <span class="info-value">
+        {{ user.email }}
+      </span>
+
+    </div>
+
+
+    <div class="info-item">
+
+      <span class="info-label">
+        تاریخ عضویت
+      </span>
+
+      <span class="info-value">
+        {{ user.date_joined|date:"Y/m/d" }}
+      </span>
+
+    </div>
+
+
+  </div>
+
+
+
+  <form method="POST" action="{% url 'account:logout' %}">
+
+    {% csrf_token %}
+
+    <button type="submit" class="btn-logout">
+      خروج از حساب
+    </button>
+
+  </form>
+
+
+</div>
+
+
+
+
+
+{% if user.profile.role == 'writer' %}
+
+
+<div class="writer-section">
+
+
+<div class="dashboard-toolbar">
+
+<h3>
+پست‌های من
+</h3>
+
+
+<a href="{% url 'blog:create' %}" class="btn btn-primary">
++ ایجاد مطلب جدید
+</a>
+
+
+</div>
+
+
+
+<div class="post-manage-table">
+
+
+<div class="post-manage-head">
+
+<span>
+عنوان
+</span>
+
+<span>
+تاریخ انتشار
+</span>
+
+<span>
+لایک
+</span>
+
+<span>
+عملیات
+</span>
+
+</div>
+
+
+
+
+{% for maqale in maqalat %}
+
+
+<div class="post-manage-row">
+
+
+<span class="pm-title">
+
+{{ maqale.title }}
+
+</span>
+
+
+
+<span class="pm-date">
+
+{{ maqale.created_at|date:"Y/m/d" }}
+
+</span>
+
+
+
+<span class="pm-likes">
+
+❤ {{ maqale.likes.count }}
+
+</span>
+
+
+
+
+<span class="pm-actions">
+
+
+<a href="{% url 'blog:detail' maqale.slug %}" class="action-pill view">
+مشاهده
+</a>
+
+
+<a href="#" class="action-pill edit">
+ویرایش
+</a>
+
+
+<button class="action-pill del">
+حذف
+</button>
+
+
+</span>
+
+
+</div>
+
+
+{% empty %}
+
+<p>
+هنوز مقاله‌ای ننوشته‌اید.
+</p>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+</main>
+
+
+
+<footer class="site-footer">
+
+<div class="footer-bottom">
+
+© ۲۰۲۶ مشاور صوت — تمام حقوق محفوظ است
+
+</div>
+
+</footer>
+
+
+
+<script src="{% static 'js/main.js' %}"></script>
+
+</body>
 </html>

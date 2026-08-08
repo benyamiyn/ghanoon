@@ -1,0 +1,121 @@
+/* ===========================================================
+   مشاور صوت — استایل فرم ایجاد/ویرایش مقاله
+   این فایل بعد از auth.css لود می‌شه و همون کارت پایه رو
+   برای فرم مقاله بزرگ‌تر و کامل‌تر می‌کنه.
+   =========================================================== */
+
+.post-form-card{
+  max-width:560px;
+}
+
+.post-back-link{
+  display:inline-block;
+  margin-bottom:18px;
+}
+
+.post-form{
+  display:flex;
+  flex-direction:column;
+}
+
+/* ---------------- DROPZONE (آپلود تصویر شاخص) ---------------- */
+.post-dropzone{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:130px;
+  border:1.5px dashed var(--line);
+  border-radius:12px;
+  background:var(--paper-2);
+  cursor:pointer;
+  margin-bottom:18px;
+  overflow:hidden;
+  transition:border-color .15s ease, background .15s ease;
+}
+.post-dropzone:hover{
+  border-color:var(--amber);
+  background:#fff;
+}
+.post-dropzone.has-image{
+  border-style:solid;
+  padding:0;
+}
+
+.post-dropzone-content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:20px;
+}
+.post-dropzone-icon{ font-size:26px; }
+.post-dropzone-text{
+  font-size:13px;
+  font-weight:700;
+  color:var(--navy-2);
+}
+.post-dropzone-hint{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.post-dropzone-preview{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  display:block;
+}
+
+/* ---------------- متن مقاله ---------------- */
+.post-textarea{
+  font-family:inherit;
+  font-size:14px;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--paper-2);
+  color:var(--ink);
+  resize:vertical;
+  outline:none;
+  line-height:1.8;
+  transition:border-color .15s ease, background .15s ease;
+}
+.post-textarea:focus{
+  border-color:var(--amber);
+  background:#fff;
+}
+
+.post-char-count{
+  align-self:flex-start;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+  margin-bottom:20px;
+}
+
+/* ---------------- دکمه‌های پایانی فرم ---------------- */
+.post-form-actions{
+  display:flex;
+  gap:10px;
+}
+.post-submit-btn{
+  flex:1;
+  margin-top:0;
+}
+.btn-cancel{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 20px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  font-size:14px;
+  font-weight:700;
+  color:var(--navy-2);
+  white-space:nowrap;
+}
+.btn-cancel:hover{
+  border-color:#e0b0a8;
+  color:#a8392e;
+}

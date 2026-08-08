@@ -1,43 +1,611 @@
-<h1>{{ maqale.title }}</h1>
-<p>{{ maqale.matn }}</p>
+```html
+{% load static %}
 
-<p>تعداد لایک: {{ likes_count }}</p>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
 
-<form method="post" action="{% url 'blog:toggle_like' maqale.slug %}">
-    {% csrf_token %}
-    <button type="submit">
-        {% if liked %}آنلایک{% else %}لایک{% endif %}
-    </button>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ maqale.title }} | مشاور صوت</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/post-detail.css' %}">
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+<div class="header-inner">
+
+
+<a href="{% url 'home' %}" class="logo">
+
+<span class="logo-mark"></span>
+
+مشاور صوت
+
+</a>
+
+
+
+<nav class="main-nav">
+
+<a href="{% url 'home' %}">
+خانه
+</a>
+
+
+<a href="{% url 'blog:list' %}" class="active">
+مقالات
+</a>
+
+
+<a href="#">
+درباره ما
+</a>
+
+</nav>
+
+
+
+
+<form class="search-form">
+
+<input 
+type="text"
+class="search-input"
+placeholder="جست‌وجوی کلیدواژه..."
+>
+
+
+<button class="search-btn">
+⌕
+</button>
+
 </form>
 
-<hr>
 
-<h3>کامنت‌ها</h3>
+
+
+
+<div class="profile-menu-wrap">
+
+
+<button class="profile-avatar">
+
+{{ user.username|first|upper }}
+
+</button>
+
+
+
+<div class="profile-dropdown">
+
+
+{% if user.is_authenticated %}
+
+<a href="{% url 'account:profile' %}" class="pd-item">
+👤 پروفایل من
+</a>
+
+
+<a href="{% url 'account:logout' %}" class="pd-item pd-danger">
+خروج
+</a>
+
+
+{% else %}
+
+
+<a href="{% url 'account:login' %}" class="pd-item">
+ورود
+</a>
+
+
+<a href="{% url 'account:register' %}" class="pd-item">
+ثبت نام
+</a>
+
+
+{% endif %}
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</header>
+
+
+
+
+
+
+<main class="post-detail-main">
+
+
+<div class="post-detail-layout">
+
+
+
+<article class="post-detail-article">
+
+
+
+<a href="{% url 'blog:list' %}" class="back-link post-back-link">
+← بازگشت به مقالات
+</a>
+
+
+
+
+<span class="blog-post-category">
+
+{{ maqale.category.title }}
+
+</span>
+
+
+
+
+<h1 class="post-detail-title">
+
+{{ maqale.title }}
+
+</h1>
+
+
+
+
+
+<div class="post-detail-author-row">
+
+
+<div class="post-detail-avatar">
+
+{{ maqale.author.username|first|upper }}
+
+</div>
+
+
+
+<div>
+
+
+<span class="post-detail-author-name">
+
+{{ maqale.author.username }}
+
+</span>
+
+
+
+<span class="post-detail-date">
+
+{{ maqale.created_at|date:"Y/m/d" }}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{% if maqale.thumbnail %}
+
+
+<img 
+src="{{ maqale.thumbnail.url }}"
+class="post-detail-cover"
+alt="{{ maqale.title }}"
+>
+
+
+{% endif %}
+
+
+
+
+
+
+<div class="post-detail-body">
+
+
+{{ maqale.matn|linebreaks }}
+
+
+</div>
+
+
+
+
+
+
+
+<div class="post-detail-actions">
+
+
+
+<button class="like-btn">
+
+
+<span class="like-icon">
+
+
+{% if is_liked %}
+
+❤️
+
+{% else %}
+
+🤍
+
+{% endif %}
+
+
+</span>
+
+
+
+<span class="like-count">
+
+{{ like_count }}
+
+</span>
+
+
+</button>
+
+
+
+
+<button class="share-btn">
+
+↗ اشتراک‌گذاری
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="comment-form-box">
+
+
+<h3>
+ثبت نظر
+</h3>
+
+
+
+
+{% if user.is_authenticated %}
+
+
+
+<form 
+method="post"
+action="{% url 'blog:add_comment' maqale.id %}"
+class="comment-form"
+>
+
+
+{% csrf_token %}
+
+
+
+<textarea
+
+name="text"
+
+class="comment-textarea"
+
+placeholder="نظر یا سوال خود را بنویسید..."
+
+rows="3"
+
+required>
+
+</textarea>
+
+
+
+<button type="submit" class="btn btn-primary">
+
+ارسال نظر
+
+</button>
+
+
+
+</form>
+
+
+
+{% else %}
+
+
+
+<div class="comment-guest-notice">
+
+
+برای ثبت نظر ابتدا
+
+
+<a href="{% url 'account:login' %}">
+وارد شوید
+</a>
+
+
+یا
+
+
+<a href="{% url 'account:register' %}">
+ثبت‌نام کنید
+</a>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="comment-list">
+
+
+<h3>
+
+نظرات ({{ comments|length }})
+
+</h3>
+
+
+
+
 
 {% for comment in comments %}
-    <p>{{ comment.author.username }} : {{ comment.text }}</p>
 
-    {% for child in comment.children.all %}
-        <div style="margin-right: 30px;">
-            <p>{{ child.author.username }} : {{ child.text }}</p>
-        </div>
-    {% endfor %}
 
-    <form method="post" action="{% url 'blog:add_comment' maqale.slug %}">
-        {% csrf_token %}
-        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-        {{ form.text }}
-        <button type="submit">پاسخ</button>
-    </form>
 
-    <hr>
+
+<div class="comment-item">
+
+
+<div class="comment-avatar">
+
+{{ comment.author.username|first|upper }}
+
+</div>
+
+
+
+<div class="comment-body">
+
+
+<div class="comment-meta">
+
+
+<span class="comment-author">
+
+{{ comment.author.username }}
+
+</span>
+
+
+
+<span class="comment-date">
+
+{{ comment.created_at|date:"Y/m/d" }}
+
+</span>
+
+
+</div>
+
+
+
+
+<p class="comment-text">
+
+{{ comment.text }}
+
+</p>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
 {% empty %}
-    <p>هنوز کامنتی ثبت نشده.</p>
+
+
+<p>
+هنوز نظری ثبت نشده است.
+</p>
+
+
+
 {% endfor %}
 
-<h3>ثبت کامنت</h3>
-<form method="post" action="{% url 'blog:add_comment' maqale.slug %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">ارسال</button>
-</form>
+
+
+
+</div>
+
+
+
+
+
+</article>
+
+
+
+
+
+
+
+<aside class="post-detail-sidebar">
+
+
+<div class="sidebar-box">
+
+
+<h3 class="sidebar-title">
+
+دسته‌بندی
+
+</h3>
+
+
+
+<div class="tag-list">
+
+
+<span class="tag">
+
+{{ maqale.category.title }}
+
+</span>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+
+</div>
+
+
+</main>
+
+
+
+
+
+
+
+
+<footer class="site-footer">
+
+
+<div class="footer-bottom">
+
+© ۲۰۲۶ مشاور صوت — تمام حقوق محفوظ است
+
+</div>
+
+
+</footer>
+
+
+
+
+
+
+
+<script src="{% static 'js/main.js' %}"></script>
+
+
+<script>
+
+
+const shareBtn = document.querySelector(".share-btn");
+
+
+shareBtn.addEventListener("click", async()=>{
+
+
+if(navigator.share){
+
+
+await navigator.share({
+
+title: document.title,
+
+url: window.location.href
+
+});
+
+
+}
+
+else{
+
+
+await navigator.clipboard.writeText(window.location.href);
+
+
+shareBtn.innerHTML="✓ لینک کپی شد";
+
+
+}
+
+
+});
+
+
+</script>
+
+
+
+</body>
+
+</html>
+```

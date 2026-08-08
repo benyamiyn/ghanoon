@@ -1,0 +1,425 @@
+/* ===========================================================
+   مشاور صوت — استایل صفحات داشبورد / مدیریت اعضا / پروفایل عضو
+   =========================================================== */
+
+.page-heading{
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  padding:26px 24px;
+}
+.page-heading-inner{
+  max-width:1180px;
+  margin:0 auto;
+}
+.page-heading h1{
+  font-size:20px;
+  font-weight:800;
+  color:var(--navy);
+  margin-bottom:4px;
+}
+.page-heading p{
+  font-size:13px;
+  color:var(--muted);
+}
+.back-link{
+  font-size:13px;
+  font-weight:700;
+  color:var(--amber);
+}
+.back-link:hover{ text-decoration:underline; }
+
+.access-notice{
+  max-width:1180px;
+  margin:16px auto 0;
+  padding:10px 16px;
+  background:#fdf3e3;
+  border:1px solid #ecd6a4;
+  color:#8a6317;
+  font-size:12.5px;
+  border-radius:9px;
+}
+
+.dashboard-main-content{
+  max-width:1180px;
+  margin:0 auto;
+  padding:28px 24px 60px;
+  flex:1 0 auto;
+  width:100%;
+}
+
+/* ---------------- MEMBERS TABLE ---------------- */
+.member-search{
+  margin-bottom:16px;
+  display:flex;
+  gap:8px;
+}
+.member-search input{
+  width:100%;
+  max-width:320px;
+  padding:10px 14px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  font-family:inherit;
+  font-size:13px;
+  background:var(--paper-2);
+  outline:none;
+}
+.member-search input:focus{ border-color:var(--amber); background:#fff; }
+.member-search-btn{
+  background:var(--navy);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  padding:10px 18px;
+  border-radius:9px;
+  white-space:nowrap;
+}
+.member-search-btn:hover{ background:var(--navy-2); }
+
+.member-table{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+.member-table-head{
+  display:grid;
+  grid-template-columns:0.7fr 1.3fr 1.6fr 1fr 1.4fr;
+  padding:12px 20px;
+  background:var(--paper-2);
+  font-size:12px;
+  font-weight:700;
+  color:var(--navy-2);
+}
+.member-row{
+  display:grid;
+  grid-template-columns:0.7fr 1.3fr 1.6fr 1fr 1.4fr;
+  align-items:center;
+  padding:14px 20px;
+  border-top:1px solid var(--line);
+  font-size:13px;
+  color:var(--ink);
+  transition:background .12s ease;
+}
+.member-row:hover{ background:var(--paper); }
+@media(max-width:800px){
+  .member-table-head{ display:none; }
+  .member-row{
+    grid-template-columns:1fr;
+    gap:4px;
+  }
+}
+
+.member-id{ color:var(--muted); font-weight:600; }
+.member-name{ font-weight:700; }
+.member-email{ color:var(--muted); font-size:12px; }
+
+.member-role{
+  display:inline-block;
+  width:fit-content;
+  font-size:11px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+}
+.role-member{ background:#eef0f4; color:var(--navy-2); }
+.role-writer{ background:rgba(201,130,47,.14); color:var(--amber); }
+.role-owner{ background:var(--navy); color:#fff; }
+
+.btn-promote{
+  font-size:11.5px;
+  font-weight:700;
+  color:#fff;
+  background:var(--amber);
+  padding:7px 12px;
+  border-radius:7px;
+  white-space:nowrap;
+}
+.btn-promote:hover{ background:#b8721f; }
+.already-writer{ font-size:11.5px; color:var(--muted); }
+
+/* ---------------- MEMBER PROFILE CARD ---------------- */
+.profile-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:28px;
+  max-width:640px;
+}
+.profile-card-head{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:22px;
+}
+.profile-big-avatar{
+  width:56px; height:56px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--amber),var(--amber-2));
+  color:#fff;
+  font-size:22px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.profile-card-head h2{
+  font-size:17px;
+  color:var(--navy);
+  margin-bottom:6px;
+}
+
+.profile-info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:26px;
+}
+@media(max-width:480px){
+  .profile-info-grid{ grid-template-columns:1fr; }
+}
+.info-item{
+  background:var(--paper-2);
+  padding:12px 14px;
+  border-radius:10px;
+}
+.info-label{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+.info-value{
+  font-size:14px;
+  font-weight:700;
+  color:var(--navy);
+}
+
+.role-action-box{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px 20px;
+}
+.role-action-box h3{
+  font-size:14.5px;
+  color:var(--navy);
+  margin-bottom:4px;
+}
+.role-action-box p{
+  font-size:12.5px;
+  color:var(--muted);
+  margin-bottom:14px;
+}
+.btn-promote-big{
+  background:var(--amber);
+  color:#fff;
+  font-weight:700;
+  font-size:13.5px;
+  padding:10px 20px;
+  border-radius:9px;
+}
+.btn-promote-big:hover{ background:#b8721f; }
+.btn-demote-big{
+  background:#fff;
+  border:1px solid #e0b0a8;
+  color:#a8392e;
+  font-weight:700;
+  font-size:13.5px;
+  padding:10px 20px;
+  border-radius:9px;
+}
+
+.role-locked-note{
+  font-size:12.5px;
+  color:var(--muted);
+  font-style:italic;
+}
+
+/* ---------------- DANGER ZONE ---------------- */
+.danger-zone-box{
+  margin-top:20px;
+  background:#fdf5f4;
+  border:1px solid #f0c9c4;
+  border-radius:12px;
+  padding:18px 20px;
+}
+.danger-zone-box h3{
+  font-size:14.5px;
+  color:#a8392e;
+  margin-bottom:4px;
+}
+.danger-zone-box p{
+  font-size:12.5px;
+  color:#a8695f;
+  margin-bottom:14px;
+}
+.btn-delete-account{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  border:1px solid #e0b0a8;
+  color:#a8392e;
+  font-weight:700;
+  font-size:13px;
+  padding:10px 18px;
+  border-radius:9px;
+}
+.btn-delete-account:hover{ background:#a8392e; color:#fff; }
+
+.delete-confirm-box{
+  background:#fff;
+  border:1px solid #e0b0a8;
+  border-radius:10px;
+  padding:14px 16px;
+  margin-top:4px;
+}
+.delete-confirm-box p{
+  font-size:13px;
+  font-weight:700;
+  color:#a8392e;
+  margin-bottom:12px;
+}
+.delete-confirm-actions{
+  display:flex;
+  gap:10px;
+}
+.btn-delete-confirm{
+  background:#a8392e;
+  color:#fff;
+  font-weight:700;
+  font-size:12.5px;
+  padding:9px 16px;
+  border-radius:8px;
+}
+.btn-delete-confirm:hover{ background:#8c2e25; }
+.btn-delete-cancel{
+  background:var(--paper-2);
+  color:var(--navy-2);
+  font-weight:600;
+  font-size:12.5px;
+  padding:9px 16px;
+  border-radius:8px;
+}
+
+/* ---------------- WRITER DASHBOARD ---------------- */
+.dashboard-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+.post-count{
+  font-size:13px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+.post-manage-table{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+.post-manage-head{
+  display:grid;
+  grid-template-columns:2.2fr 1fr 0.8fr 1.2fr;
+  padding:12px 20px;
+  background:var(--paper-2);
+  font-size:12px;
+  font-weight:700;
+  color:var(--navy-2);
+}
+.post-manage-row{
+  display:grid;
+  grid-template-columns:2.2fr 1fr 0.8fr 1.2fr;
+  align-items:center;
+  padding:14px 20px;
+  border-top:1px solid var(--line);
+  font-size:13px;
+}
+@media(max-width:800px){
+  .post-manage-head{ display:none; }
+  .post-manage-row{ grid-template-columns:1fr; gap:4px; }
+}
+.pm-title{ font-weight:700; color:var(--navy); }
+.pm-date, .pm-likes{ color:var(--muted); font-size:12px; }
+.pm-actions{ display:flex; gap:8px; }
+
+.action-pill{
+  font-size:11px;
+  font-weight:700;
+  padding:6px 12px;
+  border-radius:7px;
+}
+.action-pill.edit{ background:#e6efe0; color:#4a7a3a; }
+.action-pill.del{ background:#f4dfdf; color:#b0433f; }
+.action-pill.del:hover{ background:#b0433f; color:#fff; }
+
+/* ---------------- POST FORM ---------------- */
+.post-form-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:30px;
+  max-width:640px;
+}
+.post-form{
+  display:flex;
+  flex-direction:column;
+}
+.post-file-input{
+  font-size:13px;
+  margin-bottom:16px;
+  padding:10px;
+  border:1px dashed var(--line);
+  border-radius:9px;
+  background:var(--paper-2);
+}
+.post-textarea{
+  font-family:inherit;
+  font-size:14px;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--paper-2);
+  color:var(--ink);
+  resize:vertical;
+  outline:none;
+  margin-bottom:20px;
+  line-height:1.8;
+}
+.post-textarea:focus{ border-color:var(--amber); background:#fff; }
+.post-form-actions{
+  display:flex;
+  gap:10px;
+}
+
+/* ---------------- UNIFIED PROFILE PAGE ---------------- */
+.btn-logout{
+  background:#fff;
+  border:1px solid #e0b0a8;
+  color:#a8392e;
+  font-weight:700;
+  font-size:13px;
+  padding:9px 18px;
+  border-radius:9px;
+}
+.btn-logout:hover{ background:#a8392e; color:#fff; }
+
+.writer-section{
+  max-width:900px;
+  margin-top:26px;
+}
+.writer-section .dashboard-toolbar h3{
+  font-size:15px;
+  color:var(--navy);
+  font-weight:800;
+}
+
+.action-pill.view{ background:#e3ecf6; color:#3a6ea5; }
+.action-pill.view:hover{ background:#3a6ea5; color:#fff; }

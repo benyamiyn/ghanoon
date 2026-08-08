@@ -1,10 +1,291 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
+
 <head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ورود | مشاور صوت</title>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 
 </head>
 
+
 <body>
+
+
+
+<div class="auth-page">
+
+
+
+
+
+<aside class="auth-brand-panel">
+
+
+<div class="auth-brand-pattern"></div>
+
+
+
+<a href="{% url 'home' %}" class="auth-brand-logo">
+
+<span class="logo-mark"></span>
+
+مشاور صوت
+
+</a>
+
+
+
+
+<div class="auth-brand-content">
+
+
+<h2>
+پاسخ‌های حقوقی معتبر، دقیقاً برای صنعت صوت
+</h2>
+
+
+
+<p>
+مجموعه‌ای از سوالات و پاسخ‌های حقوقی درباره ثبت برند، قرارداد و واردات تجهیزات صوتی، نوشته‌شده توسط نویسندگان متخصص.
+</p>
+
+
+
+<ul class="auth-brand-list">
+
+
+<li>
+<span class="auth-brand-icon">⚖</span>
+پاسخ‌های تأییدشده توسط نویسندگان حقوقی
+</li>
+
+
+<li>
+<span class="auth-brand-icon">💬</span>
+امکان طرح سوال و بحث زیر هر مقاله
+</li>
+
+
+<li>
+<span class="auth-brand-icon">🔍</span>
+جست‌وجوی سریع بین صدها پاسخ حقوقی
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+
+
+
+<svg class="auth-brand-wave" viewBox="0 0 400 60" preserveAspectRatio="none">
+
+<path d="M0,30 Q25,5 50,30 T100,30 T150,30 T200,30 T250,30 T300,30 T350,30 T400,30"
+fill="none"
+stroke="rgba(255,255,255,0.18)"
+stroke-width="3"/>
+
+
+<path d="M0,42 Q25,20 50,42 T100,42 T150,42 T200,42 T250,42 T300,42 T350,42 T400,42"
+fill="none"
+stroke="rgba(255,255,255,0.1)"
+stroke-width="2"/>
+
+</svg>
+
+
+</aside>
+
+
+
+
+
+
+
+<main class="auth-form-panel">
+
+
+<div class="auth-card">
+
+
+<h1 class="auth-title">
+
+ورود به حساب کاربری
+
+</h1>
+
+
+
+<p class="auth-subtitle">
+
+برای ثبت نظر زیر مطالب، وارد حساب خود شوید
+
+</p>
+
+
+
+
+
+{% if form.errors %}
+
+
+<div class="auth-error">
+
+نام کاربری یا رمز عبور اشتباه است.
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+
+
+<form 
+class="auth-form"
+method="post"
+action="{% url 'accounts:login' %}"
+>
+
+
+{% csrf_token %}
+
+
+
+
+
+<label class="auth-label">
+
+نام کاربری یا ایمیل
+
+</label>
+
+
+
+<input
+
+type="text"
+
+name="username"
+
+class="auth-input"
+
+placeholder="نام کاربری خود را وارد کنید"
+
+required
+
+>
+
+
+
+
+
+
+<label class="auth-label">
+
+رمز عبور
+
+</label>
+
+
+
+
+<input
+
+type="password"
+
+name="password"
+
+class="auth-input"
+
+placeholder="••••••••"
+
+required
+
+>
+
+
+
+
+
+
+
+<button 
+type="submit"
+class="auth-submit"
+>
+
+ورود
+
+</button>
+
+
+
+</form>
+
+
+
+
+
+
+
+<p class="auth-switch">
+
+
+حساب کاربری ندارید؟
+
+
+<a href="{% url 'accounts:register' %}">
+
+ثبت‌نام کنید
+
+</a>
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+</main>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<script src="{% static 'js/main.js' %}"></script>
+
 
 </body>
 

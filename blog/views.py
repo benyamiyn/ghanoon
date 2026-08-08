@@ -7,14 +7,18 @@ from .forms import CommentForm
 from .models import Comment, Like, Maqale
 
 
+
 def home(request):
+
     maqaleha = (
-        Maqale.objects.select_related(
+        Maqale.objects
+        .select_related(
             "author",
             "category",
         )
         .order_by("-created_at")
     )
+
 
     return render(
         request,
@@ -23,6 +27,34 @@ def home(request):
             "maqaleha": maqaleha,
         },
     )
+
+
+
+
+
+def blog_list(request):
+
+    maqaleha = (
+        Maqale.objects
+        .select_related(
+            "author",
+            "category",
+        )
+        .order_by("-created_at")
+    )
+
+
+    return render(
+        request,
+        "blog/blog_list.html",
+        {
+            "posts": maqaleha,
+        },
+    )
+
+
+
+
 
 
 def maqale_detail(request, slug):
@@ -35,18 +67,27 @@ def maqale_detail(request, slug):
         slug=slug,
     )
 
+
     comments = (
-        maqale.comments.filter(
+        maqale.comments
+        .filter(
             parent__isnull=True,
             is_active=True,
         )
-        .select_related("author")
-        .prefetch_related("children")
+        .select_related(
+            "author",
+        )
+        .prefetch_related(
+            "children",
+        )
     )
+
 
     like_count = maqale.likes.count()
 
+
     is_liked = False
+
 
     if request.user.is_authenticated:
 
@@ -55,12 +96,20 @@ def maqale_detail(request, slug):
             user=request.user,
         ).exists()
 
+
+
     context = {
+
         "maqale": maqale,
+
         "comments": comments,
+
         "like_count": like_count,
+
         "is_liked": is_liked,
+
     }
+
 
     return render(
         request,
@@ -69,28 +118,57 @@ def maqale_detail(request, slug):
     )
 
 
+
+
+
+
+
 @login_required
 def add_comment(request, slug):
 
     if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
+
+        return HttpResponseNotAllowed(
+            ["POST"]
+        )
+
+
 
     maqale = get_object_or_404(
         Maqale,
         slug=slug,
     )
 
-    form = CommentForm(request.POST)
+
+
+    form = CommentForm(
+        request.POST
+    )
+
+
 
     if form.is_valid():
 
-        comment = form.save(commit=False)
+
+        comment = form.save(
+            commit=False
+        )
+
+
         comment.maqale = maqale
+
         comment.author = request.user
 
-        parent_id = form.cleaned_data.get("parent_id")
+
+
+        parent_id = form.cleaned_data.get(
+            "parent_id"
+        )
+
+
 
         if parent_id:
+
 
             parent_comment = Comment.objects.filter(
                 id=parent_id,
@@ -98,60 +176,99 @@ def add_comment(request, slug):
                 is_active=True,
             ).first()
 
+
+
             if parent_comment:
+
                 comment.parent = parent_comment
 
+
+
         comment.save()
+
+
 
         messages.success(
             request,
             "نظر شما ثبت شد.",
         )
 
+
     else:
+
 
         messages.error(
             request,
             "متن نظر نمی‌تواند خالی باشد.",
         )
 
+
+
     return redirect(
-        maqale.get_absolute_url(),
+        maqale.get_absolute_url()
     )
+
+
+
+
+
+
+
+
 
 
 @login_required
 def toggle_like(request, slug):
 
+
     if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
+
+        return HttpResponseNotAllowed(
+            ["POST"]
+        )
+
+
 
     maqale = get_object_or_404(
         Maqale,
         slug=slug,
     )
 
+
+
     like, created = Like.objects.get_or_create(
+
         maqale=maqale,
+
         user=request.user,
+
     )
 
+
+
     if created:
+
 
         messages.success(
             request,
             "مقاله لایک شد.",
         )
 
+
+
     else:
 
+
         like.delete()
+
 
         messages.info(
             request,
             "لایک حذف شد.",
         )
 
+
+
     return redirect(
-        maqale.get_absolute_url(),
+        maqale.get_absolute_url()
     )

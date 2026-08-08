@@ -1,10 +1,475 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
+{% load static %}
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>مشاور صوت | مقالات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
+
 <body>
+
+
+<header class="site-header">
+
+<div class="header-inner">
+
+
+<a href="{% url 'home' %}" class="logo">
+
+<span class="logo-mark"></span>
+
+مشاور صوت
+
+</a>
+
+
+
+<nav class="main-nav">
+
+<a href="{% url 'home' %}">
+خانه
+</a>
+
+
+<a href="{% url 'blog:list' %}" class="active">
+مقالات
+</a>
+
+
+<a href="#">
+درباره ما
+</a>
+
+
+</nav>
+
+
+
+
+<form class="search-form" onsubmit="return false;">
+
+<input 
+type="text"
+name="q"
+class="search-input"
+placeholder="جست‌وجوی کلیدواژه..."
+>
+
+
+<button type="submit" class="search-btn">
+
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+
+<circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+
+<path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+</svg>
+
+</button>
+
+</form>
+
+
+
+
+
+<div class="profile-menu-wrap" id="profileMenuWrap">
+
+
+<button class="profile-avatar" id="profileToggle">
+
+{% if user.is_authenticated %}
+
+{{ user.username|first|upper }}
+
+{% else %}
+
+م
+
+{% endif %}
+
+</button>
+
+
+
+<div class="profile-dropdown" id="profileDropdown">
+
+
+
+{% if user.is_authenticated %}
+
+
+
+<a href="{% url 'accounts:profile' %}" class="pd-item pd-highlight">
+
+👤 پروفایل من
+
+</a>
+
+
+
+{% if user.is_superuser %}
+
+<a href="{% url 'accounts:members' %}" class="pd-item">
+
+👥 مدیریت اعضا
+
+</a>
+
+{% endif %}
+
+
+
+<a href="{% url 'accounts:logout' %}" class="pd-item pd-danger">
+
+خروج
+
+</a>
+
+
+
+{% else %}
+
+
+<a href="{% url 'accounts:login' %}" class="pd-item">
+
+ورود
+
+</a>
+
+
+<a href="{% url 'accounts:register' %}" class="pd-item pd-highlight">
+
+ثبت‌نام
+
+</a>
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+</header>
+
+
+
+
+
+<section class="hero">
+
+<div class="hero-inner">
+
+<h1>
+سوالات حقوقی صنعت لوازم صوتی، پاسخ‌داده‌شده توسط متخصصان
+</h1>
+
+
+<p>
+آخرین تحلیل‌ها درباره قراردادها، ثبت برند و مقررات واردات تجهیزات صوتی
+</p>
+
+
+</div>
+
+</section>
+
+
+
+
+
+
+<main class="main-content">
+
+
+<div class="tabs">
+
+
+<a href="#" class="tab active">
+آخرین مطالب
+</a>
+
+
+<a href="#" class="tab">
+مطالب محبوب
+</a>
+
+
+</div>
+
+
+
+
+
+<div class="post-grid">
+
+
+
+{% for post in posts %}
+
+
+
+<article class="post-card">
+
+
+
+<a href="{% url 'blog:detail' post.slug %}" class="post-thumb-link">
+
+
+{% if post.thumbnail %}
+
+
+<img 
+src="{{ post.thumbnail.url }}"
+alt="{{ post.title }}"
+class="post-thumb"
+>
+
+
+{% endif %}
+
+
+</a>
+
+
+
+
+<div class="post-body">
+
+
+
+<h3 class="post-title">
+
+
+<a href="{% url 'blog:detail' post.slug %}">
+
+{{ post.title }}
+
+</a>
+
+
+</h3>
+
+
+
+
+<p class="post-excerpt">
+
+{{ post.matn|truncatewords:25 }}
+
+</p>
+
+
+
+
+<div class="post-meta">
+
+
+
+<span class="post-author">
+
+<span class="author-dot"></span>
+
+{{ post.author.username }}
+
+</span>
+
+
+
+
+<span class="post-likes">
+
+❤ {{ post.likes.count }}
+
+</span>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</article>
+
+
+
+{% empty %}
+
+
+<p>
+هنوز مقاله‌ای منتشر نشده است.
+</p>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="pagination">
+
+
+<a href="#" class="page-btn disabled">
+قبلی
+</a>
+
+
+<span class="page-current">
+۱
+</span>
+
+
+<a href="#" class="page-btn">
+۲
+</a>
+
+
+<a href="#" class="page-btn">
+۳
+</a>
+
+
+<a href="#" class="page-btn">
+بعدی
+</a>
+
+
+</div>
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+<footer class="site-footer">
+
+
+<div class="footer-inner">
+
+
+<div class="footer-col">
+
+
+<div class="logo footer-logo">
+
+<span class="logo-mark"></span>
+
+مشاور صوت
+
+</div>
+
+
+<p>
+پلتفرم تخصصی پاسخ‌گویی حقوقی برای صنعت تولید و واردات لوازم صوتی.
+</p>
+
+
+</div>
+
+
+
+
+<div class="footer-col">
+
+<h4>
+لینک‌های سریع
+</h4>
+
+
+<a href="#">
+درباره ما
+</a>
+
+
+<a href="{% url 'blog:list' %}">
+تمام مقالات
+</a>
+
+
+</div>
+
+
+
+
+<div class="footer-col">
+
+
+<h4>
+تماس با ما
+</h4>
+
+
+<p>
+info@mosahersoot.ir
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="footer-bottom">
+
+© ۲۰۲۶ مشاور صوت — تمام حقوق محفوظ است
+
+</div>
+
+
+
+</footer>
+
+
+
+
+
+<script src="{% static 'js/main.js' %}"></script>
+
 
 </body>
 
